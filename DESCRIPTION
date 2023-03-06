@@ -1,0 +1,12 @@
+Package: offsetEnsembleR
+Title: offsetEnsembleR: a platform for genomic offset estimation, standardization and ensemble prediction.
+Version: 0.0.0.9000
+Authors@R: c( person("Susanne", "Lachmuth", , "susanne.lachmuth@umces.edu", role = c("aut", "cre"),
+           comment = c(ORCID = "0000-0002-4027-7632")),
+          person("Matt", "Fitzpatrick", , "mfitzpatrick@umces.edu", role = c("aut", "cre"),
+           comment = c(ORCID = "0000-0003-1911-8407")))
+Description: The R package offsetEnsembleR implements functions to (1) estimate genomic offsets using various established methods, (2) standardize these offsets, and (3) produce ensemble predictions of genomic offset-based metrics.
+License: MIT + file LICENSE
+Encoding: UTF-8
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.2.3
