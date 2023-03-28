@@ -13,6 +13,38 @@
 #'@return Two dataframes: 1) Donor importance, 2) Recipient importance. Row names of the output files allow connecting donor and recipient importance values to geographic locations.
 #' Optionally, the binary transferability matrix calculated in step 1 can be returned as well.
 
+#'@examples load(redSprucePops_blueRidge_standardizedOffset)
+#' redSprucePops_blueRidge_DI_RI <- donor.recipientImportance(standOffset = redSprucePops_blueRidge_standardizedOffset, offsetThreshold = 1, returnTransferabilityMatrix = TRUE)
+#' 
+#' # view tranferability matrix:
+#' redSprucePops_blueRidge_DI_RI[[1]][1:10,1:10]
+#' 
+#' # view donor importance:
+#' redSprucePops_blueRidge_DI_RI[[2]][1:10,]
+#' 
+#' # Map recipient importance
+#' # Will ned to find a way of mapping without depending on sf
+#' #require(ggplot2)
+#' #require(maps)
+#' #load(blueRidge_transAlteredClimate)
+#' 
+#' # Get latitude and longitude
+#' #dat<-cbind(blueRidge_transAlteredClimate[,1:2],redSprucePops_blueRidge_DI_RI[[3]])
+#' #mycolors<- inlmisc::GetTolColors(n = 256,scheme = "smooth rainbow")
+#' 
+#' #map_RecImp<- ggplot2::ggplot() +
+#'  #geom_sf(data = world, fill="ivory", color=NA, size=0.3) +
+#'  #geom_tile(data = dat, aes(x=x, y=y, fill=recipientImportance)) +
+#'  #scale_fill_gradientn(limits = c(0,100),colors = mycolors, name ="Recipient importance (%)", guide = "colorbar" ) + 
+#'  #geom_sf(data = lakes, fill="#A6CAE0", size=0.3)+
+#'  #geom_sf(data = world, fill=NA, color="black", size=0.3) +
+#'  #coord_sf(xlim = c(-90, -70), ylim = c(30, 43), expand = FALSE)+
+#'  #xlab("Longitude") +
+#'  #ylab("Latitude") +
+#'  #theme_minimal()
+#' #map_RecImp
+
+
 
 #'@export
 donor.recipientImportance <- function(standOffset, # use different name since raw offsets might be used when coming e.g. from RDA

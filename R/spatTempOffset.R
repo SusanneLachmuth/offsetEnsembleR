@@ -10,6 +10,32 @@
 
 #'@return A dataframe with pair-wise genomic offsets. Columns in the rawOffset output dataframe correspond to rows of transEnv, rows of output correspond to rows of transAltEnv.
 
+#'@examples 
+#' # Example 1: sampled red spruce populations are both donors and recipients
+#' load(redSprucePops_transClimate)
+#' load(redSprucePops_transAlteredClimate)
+#' 
+#' # Calculate raw spatio-temporal offsets
+#' redSprucePops_rawOffset <- spatTempOffset(transEnv = redSprucePops_transClimate, transAltEnv = redSprucePops_transAlteredClimate, nCores = NA, nBreaks = NA, outpath = NULL)
+#' 
+#' # View result
+#' redSprucePops_rawOffset[1:10,1:10]
+#' 
+#' # Get local offsets (only works this way if rows and columns are identical locations)
+#' redSprucePops_localOffset<-diag(as.matrix(redSprucePops_rawOffset))
+#' redSprucePops_localOffset
+#' 
+#' #' # Example 2: sampled red spruce populations as donors and Blue Ridge ecoregion as recipients
+#' load(redSprucePops_transClimate)
+#' load(blueRidge_transAlteredClimate)
+#' 
+#' # Calculate raw spatio-temporal offsets
+#' redSprucePops_blueRidge_rawOffset <- spatTempOffset(transEnv = redSprucePops_transClimate, transAltEnv = blueRidge_transAlteredClimate, nCores = NA, nBreaks = NA, outpath = NULL)
+#' 
+#' # View result
+#' redSprucePops_blueRidge_rawOffset[1:10,1:10]
+
+
 #'@export
 spatTempOffset <- function(transEnv, transAltEnv, nCores = NA, nBreaks = NA, outpath = NULL, returnResult = TRUE){ 
   # Run in parallel

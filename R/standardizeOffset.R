@@ -9,20 +9,32 @@
 #'@param nBreaks (integer) Number of chunks to subset rawOffset. Chunks will be sent to single cores. nBreaks should be equal or larger than nCores. If not defined while nCores is defined, nBreaks will be equal to nCores. (default = NA).
 #'@param outpath (string) Paths to write results. If defined, results will automatically be written to disk. (default = NULL).
 #'@param returnResult (boolean) if TRUE, data are (also) returned to the R environment independent of whether an outpath is specified. (default = TRUE).
-#'@param returnOffsetProb (boolean) if TRUE, a matrix with offset probabilities (drawn from cfd) is also returned. 
+#'@param returnOffsetProb (boolean) if TRUE, a matrix with offset probabilities (drawn from cfd) is also returned.
 #'Caution:will double the required disk space and memory! (default = FALSE).
 #'
 #'@return A dataframe with offset z-scores (sigma). Dataframe columns and rows are identical with those of the rawOffset input file.
 #'Optionally, the offset probabilities calculated in step 1 can be returned as well.
+#'
+#'@examples
+#' # Sampled red spruce populations as donors and Blue Ridge ecoregion as recipients
+#' load(redSprucePops_blueRidge_rawOffset)
+#' load(redSpruce_ecdfSpatialOffsets)
+#'
+#' # Standardize raw spatio-temoral offsets
+#' redSprucePops_blueRidge_standardizedOffset <- standardizeOffset(rawOffset = redSprucePops_blueRidge_rawOffset, cdf = redSpruce_ecdfSpatialOffsets)
+#'
+#' # View results
+#' redSprucePops_blueRidge_standardizedOffset[1:10,1:10]
+
 
 #'@export
-standardizeOffset <- function(rawOffset, 
-                              cdf,  
-                              nCores = NA, 
-                              nBreaks = NA,  
-                              outpath = NULL, 
-                              returnResult = TRUE, 
-                              returnOffsetProb = FALSE){  
+standardizeOffset <- function(rawOffset,
+                              cdf,
+                              nCores = NA,
+                              nBreaks = NA,
+                              outpath = NULL,
+                              returnResult = TRUE,
+                              returnOffsetProb = FALSE){
   if(!is.na(nCores)){
     ### Checks if both nCores and nBreaks have been defined, if not sets nBreaks == nCores
     if(!is.na(nCores)&is.na(nBreaks)){
@@ -31,22 +43,22 @@ standardizeOffset <- function(rawOffset,
     }
     ### Checks if nBreaks is equal or larger than nCores
     if(nBreaks<nCores){
-      warning("nBreaks < nCores, consider setting nBreaks to a value equal or larger than nCores to ensure that all cores will be used") 
+      warning("nBreaks < nCores, consider setting nBreaks to a value equal or larger than nCores to ensure that all cores will be used")
     }
-    
+
     breakIt<- split(1:nrow(rawOffset), cut(1:nrow(rawOffset), nBreaks, labels = FALSE))
-    
+
     # Run in parallel
     cl <- makeCluster(nCores)
     registerDoParallel(cl)
-    
-    standOffset <- foreach(i = 1:length(breakIt),  .packages= c("stats", "adehabitatLT")) %dopar%{  
+
+    standOffset <- foreach(i = 1:length(breakIt),  .packages= c("stats", "adehabitatLT")) %dopar%{
       offset_sub<-rawOffset[breakIt[[i]],]
       if(returnOffsetProb == FALSE){
         out <- apply(offset_sub, 2, FUN=function(x){
           sigma <- adehabitatLT::qchi(cdf(x),1)
         })
-        
+
       } else {
         offset_prob <- apply(offset_sub, 2, FUN=function(x){
           offset_probabilty <- cdf(x)
@@ -55,16 +67,16 @@ standardizeOffset <- function(rawOffset,
           offset_sigmavalue <- adehabitatLT::qchi(x,1)
         })
         out<-list(offset_prob,offset_sigma)
-      } 
-      return(out) 
+      }
+      return(out)
     }
     stopCluster(cl)
-    
+
     if (returnOffsetProb == FALSE){
       offset_sigma_out<-as.data.frame(do.call(rbind, standOffset))
       rownames(offset_sigma_out)<-rownames(rawOffset)
     }
-    
+
     if (returnOffsetProb == TRUE){
       offset_prob<-as.data.frame(do.call(rbind, lapply(standOffset, function(x) x[[1]])))
       rownames(offset_prob) <- colnames(offset_prob) <- rownames(rawOffset)
@@ -72,7 +84,7 @@ standardizeOffset <- function(rawOffset,
       rownames(offset_sigma) <- rownames(rawOffset)
       colnames(offset_sigma) <- colnames(rawOffset)
     }
-    
+
     # non-parallel
   } else {
     offset_prob <-apply(rawOffset, 2, FUN=function(x){
@@ -80,9 +92,9 @@ standardizeOffset <- function(rawOffset,
     rownames(offset_prob) <- rownames(rawOffset)
     colnames(offset_prob) <- colnames(rawOffset)
     offset_sigma <- adehabitatLT::qchi(offset_prob,1)
-  } 
-  
-  # Return and / or save objects  
+  }
+
+  # Return and / or save objects
   if(returnOffsetProb == FALSE){ # Return / save offset_sigma only
     #rm(offset_prob)
     if (!is.null(outpath)){

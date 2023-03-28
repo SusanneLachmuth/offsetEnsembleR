@@ -1,5 +1,5 @@
 #'@title Calculate spatial offsets
-#'@description Calculates contemporary spatial genomic offsets. 
+#'@description Calculates contemporary spatial genomic offsets.
 
 #'@param transEnv (dataframe) A dataframe holding transformed environmental variables of all occurrences of a species in a reference geographic region.
 #'@param nCores (integer) Number of cores to be used in parallel computing. If defined, function will automatically perform in parallel. (default = NA).
@@ -7,19 +7,19 @@
 #'@param outpath (string) Paths to write results. If defined, results will automatically be written to disk. (default = NULL).
 #'@param returnResult (boolean) if TRUE, data are (also) returned to the R environment independent of whether an outpath is specified. (default = TRUE).
 
-#'@return A function of class ecdf (empirical cumulative distribution function). See help of stats package for more detail. 
+#'@return A function of class ecdf (empirical cumulative distribution function). See help of stats package for more detail.
 
-#'@examples 
-#' data(blueRidge_transAlteredClimate) 
-#' ecdf_spatOffset <- spatOffset(transEnv = blueRidge_transAlteredClimate, nCores = NA, nBreaks = NA, outpath = NULL, returnResult = TRUE)
+#'@examples
+#' data(redSpruce_transClimate_spatialOffsets)
+#' redSpruce_ecdfSpatialOffsets <- spatOffset(transEnv = redSpruce_transClimate_spatialOffsets)
 #' # Plot eCDF
-#' plot(ecdf_spatOffset)
+#' plot(redSpruce_ecdfSpatialOffsets)
 
-#'@export 
-spatOffset <- function(transEnv,  
-                       nCores = NA, 
-                       nBreaks = NA, 
-                       outpath = NULL, 
+#'@export
+spatOffset <- function(transEnv,
+                       nCores = NA,
+                       nBreaks = NA,
+                       outpath = NULL,
                        returnResult = TRUE){
   ## Run in parallel
   if(!is.na(nCores)){
@@ -30,7 +30,7 @@ spatOffset <- function(transEnv,
     }
     ### Checks if nBreaks is equal or larger than nCores
     if(nBreaks<nCores){
-      warning("nBreaks < nCores, consider setting nBreaks to a value equal or larger than nCores to ensure that all cores will be used") 
+      warning("nBreaks < nCores, consider setting nBreaks to a value equal or larger than nCores to ensure that all cores will be used")
     }
     ### Split transEnv data
     breakIt <- split(1:nrow(transEnv), cut(1:nrow(transEnv), nBreaks, labels = FALSE))
@@ -44,22 +44,22 @@ spatOffset <- function(transEnv,
       return(spatOffset_sub_mat)
     }
     stopCluster(cl)
-    
+
     ### Call and format data
     spatOffset_out <- as.data.frame(do.call(rbind, spatOffset)) # as.df necessary?
     spatOffset_mat <- as.matrix(spatOffset_out) # necessary?
-    
+
     ## Single core
   } else {
     ### Calculate pairwise spatial offset matrix
     spatOffset_mat <- rdist::pdist(transEnv)
   }
-  
+
   ## Melt lower triangle of spatial offset matrix into long format
   spatOffset_lon <- reshape2::melt(spatOffset_mat)[reshape2::melt(lower.tri(spatOffset_mat))$value,]
   # Get empirical cumulative density function
   ecdfSpatOffset <- stats::ecdf(spatOffset_lon$value)
-  
+
   ## Write to disk if outpath is defined
   if (!is.null(outpath)){
     save(ecdfSpatOffset,file=paste0(outpath,"cdfSpatOffset.Rdata"))
