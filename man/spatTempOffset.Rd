@@ -38,7 +38,8 @@ data(redSprucePops_transClimate)
 data(redSprucePops_transAlteredClimate)
 
 # Calculate raw spatio-temporal offsets
-redSprucePops_rawOffset <- spatTempOffset(transEnv = redSprucePops_transClimate, transAltEnv = redSprucePops_transAlteredClimate, nCores = NA, nBreaks = NA, outpath = NULL)
+redSprucePops_rawOffset <- spatTempOffset(transEnv = redSprucePops_transClimate,
+transAltEnv = redSprucePops_transAlteredClimate, nCores = NA, nBreaks = NA, outpath = NULL)
 
 # View result
 redSprucePops_rawOffset[1:10,1:10]
@@ -52,7 +53,8 @@ data(redSprucePops_transClimate)
 data(blueRidge_transAlteredClimate)
 
 # Calculate raw spatio-temporal offsets
-redSprucePops_blueRidge_rawOffset <- spatTempOffset(transEnv = redSprucePops_transClimate, transAltEnv = blueRidge_transAlteredClimate, nCores = NA, nBreaks = NA, outpath = NULL)
+redSprucePops_blueRidge_rawOffset <- spatTempOffset(transEnv = redSprucePops_transClimate,
+transAltEnv = blueRidge_transAlteredClimate, nCores = NA, nBreaks = NA, outpath = NULL)
 
 # View result
 redSprucePops_blueRidge_rawOffset[1:10,1:10]

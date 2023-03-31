@@ -16,7 +16,8 @@
 #' data(redSprucePops_transAlteredClimate)
 #'
 #' # Calculate raw spatio-temporal offsets
-#' redSprucePops_rawOffset <- spatTempOffset(transEnv = redSprucePops_transClimate, transAltEnv = redSprucePops_transAlteredClimate, nCores = NA, nBreaks = NA, outpath = NULL)
+#' redSprucePops_rawOffset <- spatTempOffset(transEnv = redSprucePops_transClimate,
+#' transAltEnv = redSprucePops_transAlteredClimate, nCores = NA, nBreaks = NA, outpath = NULL)
 #'
 #' # View result
 #' redSprucePops_rawOffset[1:10,1:10]
@@ -30,7 +31,8 @@
 #' data(blueRidge_transAlteredClimate)
 #'
 #' # Calculate raw spatio-temporal offsets
-#' redSprucePops_blueRidge_rawOffset <- spatTempOffset(transEnv = redSprucePops_transClimate, transAltEnv = blueRidge_transAlteredClimate, nCores = NA, nBreaks = NA, outpath = NULL)
+#' redSprucePops_blueRidge_rawOffset <- spatTempOffset(transEnv = redSprucePops_transClimate,
+#' transAltEnv = blueRidge_transAlteredClimate, nCores = NA, nBreaks = NA, outpath = NULL)
 #'
 #' # View result
 #' redSprucePops_blueRidge_rawOffset[1:10,1:10]
@@ -54,15 +56,15 @@ spatTempOffset <- function(transEnv, transAltEnv, nCores = NA, nBreaks = NA, out
     breakIt <- split(1:nrow(transAltEnv), cut(1:nrow(transAltEnv), nCores, nBreaks, labels = FALSE))
 
     # Set up cluster
-    cl <- makeCluster(nCores)
-    registerDoParallel(cl)
+    cl <- parallel::makeCluster(nCores)
+    doParallel::registerDoParallel(cl)
 
-    rawOffset <- foreach(i = 1:length(breakIt), .packages = "fields") %dopar%{
+    rawOffset <- foreach::foreach(i = 1:length(breakIt), .packages = "fields") %dopar%{
       # Calculate pairwise offset matrix
       rawOffset<-fields::rdist(transAltEnv[breakIt[[i]],], transEnv)
       return(rawOffset)
     }
-    stopCluster(cl)
+    parallel::stopCluster(cl)
 
     # Call and format data
     rawOffset<- as.data.frame(do.call(rbind, rawOffset))

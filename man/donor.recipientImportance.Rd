@@ -15,6 +15,8 @@ donor.recipientImportance(
 )
 }
 \arguments{
+\item{standOffset}{(dataframe) A dataframe holding pairwise (standardized) offsets between donor and recipient locations.}
+
 \item{offsetThreshold}{(double) 'not to exceed' (standardized) offset threshold when evaluating transferability between donor and recipient locations.}
 
 \item{nCores}{(integer) Number of cores to be used in parallel computing. If defined function will automatically perform in parallel. (default = NA).}
@@ -27,8 +29,6 @@ donor.recipientImportance(
 
 \item{returnTransferabilityMatrix}{(boolean) if TRUE, a binary transferability matrix between donors and recipients is also returned.
 Caution: will highly increase the required disk space and memory! (default = FALSE).}
-
-\item{rawOffset}{(dataframe) A dataframe holding pairwise (standardized) offsets between donor and recipient locations.}
 }
 \value{
 Two dataframes: 1) Donor importance, 2) Recipient importance. Row names of the output files allow connecting donor and recipient importance values to geographic locations.
@@ -39,7 +39,8 @@ Calculates pairwise transferability between donor and recipient locations as wel
 }
 \examples{
 data(redSprucePops_blueRidge_standardizedOffset)
-redSprucePops_blueRidge_DI_RI <- donor.recipientImportance(standOffset = redSprucePops_blueRidge_standardizedOffset, offsetThreshold = 1, returnTransferabilityMatrix = TRUE)
+redSprucePops_blueRidge_DI_RI <- donor.recipientImportance(standOffset = redSprucePops_blueRidge_standardizedOffset,
+offsetThreshold = 1, returnTransferabilityMatrix = TRUE)
 
 # view tranferability matrix:
 redSprucePops_blueRidge_DI_RI[[1]][1:10,1:10]

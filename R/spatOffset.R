@@ -38,12 +38,12 @@ spatOffset <- function(transEnv,
     cl <- parallel::makeCluster(nCores)
     doParallel::registerDoParallel(cl)
     ### Loop through transEnv subsets and calculate offsets (as Euclidean distances)
-    spatOffset<- foreach(i = 1:length(breakIt), .packages = "fields") %dopar%{
+    spatOffset<- foreach::foreach(i = 1:length(breakIt), .packages = "fields") %dopar%{
       # Pairwise spatial offset matrix
       spatOffset_sub_mat<-fields::rdist(transEnv[breakIt[[i]],], transEnv)
       return(spatOffset_sub_mat)
     }
-    stopCluster(cl)
+    parallel::stopCluster(cl)
 
     ### Call and format data
     spatOffset_out <- as.data.frame(do.call(rbind, spatOffset)) # as.df necessary?

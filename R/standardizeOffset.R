@@ -21,7 +21,8 @@
 #' data(redSpruce_ecdfSpatialOffsets)
 #'
 #' # Standardize raw spatio-temoral offsets
-#' redSprucePops_blueRidge_standardizedOffset <- standardizeOffset(rawOffset = redSprucePops_blueRidge_rawOffset, cdf = redSpruce_ecdfSpatialOffsets)
+#' redSprucePops_blueRidge_standardizedOffset <- standardizeOffset(rawOffset = redSprucePops_blueRidge_rawOffset,
+#' cdf = redSpruce_ecdfSpatialOffsets)
 #'
 #' # View results
 #' redSprucePops_blueRidge_standardizedOffset[1:10,1:10]
@@ -49,10 +50,10 @@ standardizeOffset <- function(rawOffset,
     breakIt<- split(1:nrow(rawOffset), cut(1:nrow(rawOffset), nBreaks, labels = FALSE))
 
     # Run in parallel
-    cl <- makeCluster(nCores)
-    registerDoParallel(cl)
+    cl <- parallel::makeCluster(nCores)
+    doParallel::registerDoParallel(cl)
 
-    standOffset <- foreach(i = 1:length(breakIt),  .packages= c("stats", "adehabitatLT")) %dopar%{
+    standOffset <- foreach::foreach(i = 1:length(breakIt),  .packages= c("stats", "adehabitatLT")) %dopar%{
       offset_sub<-rawOffset[breakIt[[i]],]
       if(returnOffsetProb == FALSE){
         out <- apply(offset_sub, 2, FUN=function(x){
@@ -70,7 +71,7 @@ standardizeOffset <- function(rawOffset,
       }
       return(out)
     }
-    stopCluster(cl)
+    parallel::stopCluster(cl)
 
     if (returnOffsetProb == FALSE){
       offset_sigma_out<-as.data.frame(do.call(rbind, standOffset))
