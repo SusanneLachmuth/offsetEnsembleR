@@ -7,35 +7,36 @@
 #'@param nBreaks (integer) Number of chunks to subset rawOffset. Chunks will be sent to single cores. nBreaks should be equal or larger than nCores. If not defined while nCores is defined, nBreaks will be equal to nCores. (default = NA).
 #'@param outpath (string) Paths to write results. If defined, results will automatically be written to disk. (default = NULL).
 #'@param returnResult (boolean) if TRUE, data are (also) returned to the R environment independent of whether an outpath is specified. (default = TRUE).
-#'@param returnTransferabilityMatrix (boolean) if TRUE, a binary transferability matrix between donors and recipients is also returned. 
+#'@param returnTransferabilityMatrix (boolean) if TRUE, a binary transferability matrix between donors and recipients is also returned.
 #'Caution: will highly increase the required disk space and memory! (default = FALSE).
 #'
 #'@return Two dataframes: 1) Donor importance, 2) Recipient importance. Row names of the output files allow connecting donor and recipient importance values to geographic locations.
 #' Optionally, the binary transferability matrix calculated in step 1 can be returned as well.
 
-#'@examples load(redSprucePops_blueRidge_standardizedOffset)
+#'@examples
+#' data(redSprucePops_blueRidge_standardizedOffset)
 #' redSprucePops_blueRidge_DI_RI <- donor.recipientImportance(standOffset = redSprucePops_blueRidge_standardizedOffset, offsetThreshold = 1, returnTransferabilityMatrix = TRUE)
-#' 
+#'
 #' # view tranferability matrix:
 #' redSprucePops_blueRidge_DI_RI[[1]][1:10,1:10]
-#' 
+#'
 #' # view donor importance:
 #' redSprucePops_blueRidge_DI_RI[[2]][1:10,]
-#' 
+#'
 #' # Map recipient importance
 #' # Will ned to find a way of mapping without depending on sf
 #' #require(ggplot2)
 #' #require(maps)
 #' #load(blueRidge_transAlteredClimate)
-#' 
+#'
 #' # Get latitude and longitude
 #' #dat<-cbind(blueRidge_transAlteredClimate[,1:2],redSprucePops_blueRidge_DI_RI[[3]])
 #' #mycolors<- inlmisc::GetTolColors(n = 256,scheme = "smooth rainbow")
-#' 
+#'
 #' #map_RecImp<- ggplot2::ggplot() +
 #'  #geom_sf(data = world, fill="ivory", color=NA, size=0.3) +
 #'  #geom_tile(data = dat, aes(x=x, y=y, fill=recipientImportance)) +
-#'  #scale_fill_gradientn(limits = c(0,100),colors = mycolors, name ="Recipient importance (%)", guide = "colorbar" ) + 
+#'  #scale_fill_gradientn(limits = c(0,100),colors = mycolors, name ="Recipient importance (%)", guide = "colorbar" ) +
 #'  #geom_sf(data = lakes, fill="#A6CAE0", size=0.3)+
 #'  #geom_sf(data = world, fill=NA, color="black", size=0.3) +
 #'  #coord_sf(xlim = c(-90, -70), ylim = c(30, 43), expand = FALSE)+
@@ -48,20 +49,20 @@
 
 #'@export
 donor.recipientImportance <- function(standOffset, # use different name since raw offsets might be used when coming e.g. from RDA
-                                      offsetThreshold = 1, 
-                                      nCores = NA, 
-                                      nBreaks = NA,  
-                                      outpath = NULL, 
-                                      returnResult = TRUE, 
+                                      offsetThreshold = 1,
+                                      nCores = NA,
+                                      nBreaks = NA,
+                                      outpath = NULL,
+                                      returnResult = TRUE,
                                       returnTransferabilityMatrix = FALSE)
-{ 
-  
+{
+
   ##checks to see if offsetThreshold is numeric
   if(!is.numeric(offsetThreshold)){
     stop("offsetThreshold must be numeric.")
   }
-  
-  ## Run in parallel 
+
+  ## Run in parallel
   if(!is.na(nCores)){
     ### Checks if both nCores and nBreaks have been defined, if not sets nBreaks == nCores
     if(!is.na(nCores)&is.na(nBreaks)){
@@ -70,15 +71,15 @@ donor.recipientImportance <- function(standOffset, # use different name since ra
     }
     ### Checks if nBreaks is equal or larger than nCores
     if(nBreaks<nCores){
-      warning("nBreaks < nCores, consider setting nBreaks to a value equal or larger than nCores to ensure that all cores will be used") 
+      warning("nBreaks < nCores, consider setting nBreaks to a value equal or larger than nCores to ensure that all cores will be used")
     }
-    
+
     breakIt <- split(1:nrow(standOffset), cut(1:nrow(standOffset), nBreaks, labels = FALSE))
-    
+
     # Run in parallel
     cl <- makeCluster(nCores)
     registerDoParallel(cl)
-    
+
     applySigmaTH <- foreach(i = 1:length(breakIt)) %dopar%{
       standOffset_sub<-standOffset[breakIt[[i]],]
       transferability_sub <- apply(standOffset_sub, 2, FUN=function(x){
@@ -87,25 +88,25 @@ donor.recipientImportance <- function(standOffset, # use different name since ra
       return(transferability_sub)
     }
     stopCluster(cl)
-    
+
     # Call and format data
     transferabilityMatrix <- as.data.frame(do.call(rbind, applySigmaTH))
-    
+
     # Non-parallel
   }else{
     transferabilityMatrix <- apply(standOffset, 2, FUN=function(x){
       transferability <- ifelse(x <= offsetThreshold,1,0)})
   }
-  
-  
-  
+
+
+
   # Calculate donor and recipient importance and store in separate data frames
   donorImportance <- data.frame(donorImportance = (colSums(transferabilityMatrix, na.rm = T) / nrow(transferabilityMatrix) * 100), row.names = colnames(standOffset))
   recipientImportance <- data.frame(recipientImportance = (rowSums(transferabilityMatrix, na.rm = T) / ncol(transferabilityMatrix) * 100), row.names = rownames(standOffset))
-  
+
   # Save or return data
   ## Donor and recipient importance only
-  if(returnTransferabilityMatrix == FALSE){ 
+  if(returnTransferabilityMatrix == FALSE){
     rm(transferabilityMatrix)
     ### Save to disk
     if (!is.null(outpath)){
@@ -116,7 +117,7 @@ donor.recipientImportance <- function(standOffset, # use different name since ra
     if(is.null(outpath)||returnResult){
       return(list(donorImportance, recipientImportance))
     }
-    ## Including transferability matrix 
+    ## Including transferability matrix
   } else {
     if (!is.null(outpath)){
       save(transferabilityMatrix, file = paste0(outpath, "transferabilityMatrix.Rdata"))
@@ -127,5 +128,5 @@ donor.recipientImportance <- function(standOffset, # use different name since ra
       return(list(transferabilityMatrix, donorImportance, recipientImportance))
     }
   }
-  
+
 }

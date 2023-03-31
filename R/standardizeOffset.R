@@ -17,8 +17,8 @@
 #'
 #'@examples
 #' # Sampled red spruce populations as donors and Blue Ridge ecoregion as recipients
-#' load(redSprucePops_blueRidge_rawOffset)
-#' load(redSpruce_ecdfSpatialOffsets)
+#' data(redSprucePops_blueRidge_rawOffset)
+#' data(redSpruce_ecdfSpatialOffsets)
 #'
 #' # Standardize raw spatio-temoral offsets
 #' redSprucePops_blueRidge_standardizedOffset <- standardizeOffset(rawOffset = redSprucePops_blueRidge_rawOffset, cdf = redSpruce_ecdfSpatialOffsets)
