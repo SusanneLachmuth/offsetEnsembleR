@@ -1,21 +1,24 @@
-#'@title Calculate spatial offsets
-#'@description Calculates contemporary spatial genomic offsets.
+#' @title Calculate spatial offsets
+#' @description Calculates contemporary spatial genomic offsets.
 
-#'@param transEnv (dataframe) A dataframe holding transformed environmental variables of all occurrences of a species in a reference geographic region.
-#'@param nCores (integer) Number of cores to be used in parallel computing. If defined, function will automatically perform in parallel. (default = NA).
-#'@param nBreaks (integer) Number of chunks to subset rawOffset. Chunks will be sent to single cores. nBreaks should be equal or larger than nCores. If not defined while nCores is defined, nBreaks will be equal to nCores. (default = NA).
-#'@param outpath (string) Paths to write results. If defined, results will automatically be written to disk. (default = NULL).
-#'@param returnResult (boolean) if TRUE, data are (also) returned to the R environment independent of whether an outpath is specified. (default = TRUE).
+#' @param transEnv (dataframe) A dataframe holding transformed environmental variables of all occurrences of a species in a reference geographic region.
+#' @param nCores (integer) Number of cores to be used in parallel computing. If defined, function will automatically perform in parallel. (default = NA).
+#' @param nBreaks (integer) Number of chunks to subset rawOffset. Chunks will be sent to single cores. nBreaks should be equal or larger than nCores. If not defined while nCores is defined, nBreaks will be equal to nCores. (default = NA).
+#' @param outpath (string) Paths to write results. If defined, results will automatically be written to disk. (default = NULL).
+#' @param returnResult (boolean) if TRUE, data are (also) returned to the R environment independent of whether an outpath is specified. (default = TRUE).
 
-#'@return A function of class ecdf (empirical cumulative distribution function). See help of stats package for more detail.
+#' @return A function of class ecdf (empirical cumulative distribution function). See help of stats package for more detail.
 
-#'@examples
+#' @examples
 #' data(redSpruce_transClimate_spatialOffsets)
 #' redSpruce_ecdfSpatialOffsets <- spatOffset(transEnv = redSpruce_transClimate_spatialOffsets)
 #' # Plot eCDF
 #' plot(redSpruce_ecdfSpatialOffsets)
 
-#'@export
+#' @importFrom foreach %dopar%
+
+#' @export
+# Function
 spatOffset <- function(transEnv,
                        nCores = NA,
                        nBreaks = NA,

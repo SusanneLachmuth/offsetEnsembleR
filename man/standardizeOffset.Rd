@@ -45,7 +45,8 @@ data(redSprucePops_blueRidge_rawOffset)
 data(redSpruce_ecdfSpatialOffsets)
 
 # Standardize raw spatio-temoral offsets
-redSprucePops_blueRidge_standardizedOffset <- standardizeOffset(rawOffset = redSprucePops_blueRidge_rawOffset,
+redSprucePops_blueRidge_standardizedOffset <-
+standardizeOffset(rawOffset = redSprucePops_blueRidge_rawOffset,
 cdf = redSpruce_ecdfSpatialOffsets)
 
 # View results

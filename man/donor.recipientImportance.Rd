@@ -39,7 +39,8 @@ Calculates pairwise transferability between donor and recipient locations as wel
 }
 \examples{
 data(redSprucePops_blueRidge_standardizedOffset)
-redSprucePops_blueRidge_DI_RI <- donor.recipientImportance(standOffset = redSprucePops_blueRidge_standardizedOffset,
+redSprucePops_blueRidge_DI_RI <-
+donor.recipientImportance(standOffset = redSprucePops_blueRidge_standardizedOffset,
 offsetThreshold = 1, returnTransferabilityMatrix = TRUE)
 
 # view tranferability matrix:
@@ -61,7 +62,8 @@ redSprucePops_blueRidge_DI_RI[[2]][1:10,]
 #map_RecImp<- ggplot2::ggplot() +
  #geom_sf(data = world, fill="ivory", color=NA, size=0.3) +
  #geom_tile(data = dat, aes(x=x, y=y, fill=recipientImportance)) +
- #scale_fill_gradientn(limits = c(0,100),colors = mycolors, name ="Recipient importance (\%)", guide = "colorbar" ) +
+ #scale_fill_gradientn(limits = c(0,100),colors = mycolors,
+ #name ="Recipient importance (\%)", guide = "colorbar" ) +
  #geom_sf(data = lakes, fill="#A6CAE0", size=0.3)+
  #geom_sf(data = world, fill=NA, color="black", size=0.3) +
  #coord_sf(xlim = c(-90, -70), ylim = c(30, 43), expand = FALSE)+

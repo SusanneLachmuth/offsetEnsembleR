@@ -1,16 +1,16 @@
-#'@title Calculate (spatio-)temporal offsets
-#'@description Calculates raw genomic offsets.
+#' @title Calculate (spatio-)temporal offsets
+#' @description Calculates raw genomic offsets.
 
-#'@param transEnv (dataframe) A dataframe holding transformed environmental variables.
-#'@param transAltEnv (dataframe) A dataframe holding transformed altered environmental variables.
-#'@param nCores (integer) Number of cores to be used in parallel computing. If defined, function will automatically perform in parallel. (default = NA).
-#'@param nBreaks (integer) Number of chunks to subset rawOffset. Chunks will be sent to single cores. nBreaks should be equal or larger than nCores. If not defined while nCores is defined, nBreaks will be equal to nCores. (default = NA).
-#'@param outpath (string) Paths to write results. If defined, results will automatically be written to disk. (default = NULL).
-#'@param returnResult (boolean) if TRUE, data are (also) returned to the R environment independent of whether an outpath is specified. (default = TRUE).
+#' @param transEnv (dataframe) A dataframe holding transformed environmental variables.
+#' @param transAltEnv (dataframe) A dataframe holding transformed altered environmental variables.
+#' @param nCores (integer) Number of cores to be used in parallel computing. If defined, function will automatically perform in parallel. (default = NA).
+#' @param nBreaks (integer) Number of chunks to subset rawOffset. Chunks will be sent to single cores. nBreaks should be equal or larger than nCores. If not defined while nCores is defined, nBreaks will be equal to nCores. (default = NA).
+#' @param outpath (string) Paths to write results. If defined, results will automatically be written to disk. (default = NULL).
+#' @param returnResult (boolean) if TRUE, data are (also) returned to the R environment independent of whether an outpath is specified. (default = TRUE).
 
-#'@return A dataframe with pair-wise genomic offsets. Columns in the rawOffset output dataframe correspond to rows of transEnv, rows of output correspond to rows of transAltEnv.
+#' @return A dataframe with pair-wise genomic offsets. Columns in the rawOffset output dataframe correspond to rows of transEnv, rows of output correspond to rows of transAltEnv.
 
-#'@examples
+#' @examples
 #' # Example 1: sampled red spruce populations are both donors and recipients
 #' data(redSprucePops_transClimate)
 #' data(redSprucePops_transAlteredClimate)
@@ -37,8 +37,10 @@
 #' # View result
 #' redSprucePops_blueRidge_rawOffset[1:10,1:10]
 
+#' @importFrom foreach %dopar%
 
-#'@export
+#' @export
+# Function
 spatTempOffset <- function(transEnv, transAltEnv, nCores = NA, nBreaks = NA, outpath = NULL, returnResult = TRUE){
   # Run in parallel
   if(!is.na(nCores)){

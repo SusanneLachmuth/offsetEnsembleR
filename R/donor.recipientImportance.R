@@ -1,21 +1,22 @@
-#'@title Donor and recipient importance
-#'@description Calculates pairwise transferability between donor and recipient locations as well as donor and recipient importance.). Donor Importance for each donor location is calculated as the percentage of recipient locations with a (standardized) offset below the offset threshold. Recipient Importance  of each potential recipient locations represents the percentage of donor cells with a standardized offset below the offset threshold when paired with this recipient.
+#' @title Donor and recipient importance
+#' @description Calculates pairwise transferability between donor and recipient locations as well as donor and recipient importance.). Donor Importance for each donor location is calculated as the percentage of recipient locations with a (standardized) offset below the offset threshold. Recipient Importance  of each potential recipient locations represents the percentage of donor cells with a standardized offset below the offset threshold when paired with this recipient.
 
-#'@param standOffset (dataframe) A dataframe holding pairwise (standardized) offsets between donor and recipient locations.
-#'@param offsetThreshold (double) 'not to exceed' (standardized) offset threshold when evaluating transferability between donor and recipient locations.
-#'@param nCores (integer) Number of cores to be used in parallel computing. If defined function will automatically perform in parallel. (default = NA).
-#'@param nBreaks (integer) Number of chunks to subset rawOffset. Chunks will be sent to single cores. nBreaks should be equal or larger than nCores. If not defined while nCores is defined, nBreaks will be equal to nCores. (default = NA).
-#'@param outpath (string) Paths to write results. If defined, results will automatically be written to disk. (default = NULL).
-#'@param returnResult (boolean) if TRUE, data are (also) returned to the R environment independent of whether an outpath is specified. (default = TRUE).
-#'@param returnTransferabilityMatrix (boolean) if TRUE, a binary transferability matrix between donors and recipients is also returned.
+#' @param standOffset (dataframe) A dataframe holding pairwise (standardized) offsets between donor and recipient locations.
+#' @param offsetThreshold (double) 'not to exceed' (standardized) offset threshold when evaluating transferability between donor and recipient locations.
+#' @param nCores (integer) Number of cores to be used in parallel computing. If defined function will automatically perform in parallel. (default = NA).
+#' @param nBreaks (integer) Number of chunks to subset rawOffset. Chunks will be sent to single cores. nBreaks should be equal or larger than nCores. If not defined while nCores is defined, nBreaks will be equal to nCores. (default = NA).
+#' @param outpath (string) Paths to write results. If defined, results will automatically be written to disk. (default = NULL).
+#' @param returnResult (boolean) if TRUE, data are (also) returned to the R environment independent of whether an outpath is specified. (default = TRUE).
+#' @param returnTransferabilityMatrix (boolean) if TRUE, a binary transferability matrix between donors and recipients is also returned.
 #'Caution: will highly increase the required disk space and memory! (default = FALSE).
 
-#'@return Two dataframes: 1) Donor importance, 2) Recipient importance. Row names of the output files allow connecting donor and recipient importance values to geographic locations.
+#' @return Two dataframes: 1) Donor importance, 2) Recipient importance. Row names of the output files allow connecting donor and recipient importance values to geographic locations.
 #' Optionally, the binary transferability matrix calculated in step 1 can be returned as well.
 
-#'@examples
+#' @examples
 #' data(redSprucePops_blueRidge_standardizedOffset)
-#' redSprucePops_blueRidge_DI_RI <- donor.recipientImportance(standOffset = redSprucePops_blueRidge_standardizedOffset,
+#' redSprucePops_blueRidge_DI_RI <-
+#' donor.recipientImportance(standOffset = redSprucePops_blueRidge_standardizedOffset,
 #' offsetThreshold = 1, returnTransferabilityMatrix = TRUE)
 #'
 #' # view tranferability matrix:
@@ -37,7 +38,8 @@
 #' #map_RecImp<- ggplot2::ggplot() +
 #'  #geom_sf(data = world, fill="ivory", color=NA, size=0.3) +
 #'  #geom_tile(data = dat, aes(x=x, y=y, fill=recipientImportance)) +
-#'  #scale_fill_gradientn(limits = c(0,100),colors = mycolors, name ="Recipient importance (%)", guide = "colorbar" ) +
+#'  #scale_fill_gradientn(limits = c(0,100),colors = mycolors,
+#'  #name ="Recipient importance (%)", guide = "colorbar" ) +
 #'  #geom_sf(data = lakes, fill="#A6CAE0", size=0.3)+
 #'  #geom_sf(data = world, fill=NA, color="black", size=0.3) +
 #'  #coord_sf(xlim = c(-90, -70), ylim = c(30, 43), expand = FALSE)+
@@ -46,9 +48,10 @@
 #'  #theme_minimal()
 #' #map_RecImp
 
+#' @importFrom foreach %dopar%
 
-
-#'@export
+#' @export
+# Function
 donor.recipientImportance <- function(standOffset, # use different name since raw offsets might be used when coming e.g. from RDA
                                       offsetThreshold = 1,
                                       nCores = NA,
