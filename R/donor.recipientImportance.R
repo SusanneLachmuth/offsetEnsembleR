@@ -1,10 +1,10 @@
 #' @title Donor and recipient importance
-#' @description Calculates pairwise transferability between donor and recipient locations as well as donor and recipient importance.). Donor Importance for each donor location is calculated as the percentage of recipient locations with a (standardized) offset below the offset threshold. Recipient Importance  of each potential recipient locations represents the percentage of donor cells with a standardized offset below the offset threshold when paired with this recipient.
+#' @description Calculates pairwise transferability between donor and recipient locations as well as donor and recipient importance. Donor Importance for each donor location is calculated as the percentage of recipient locations with a (standardized) offset below a 'not-to-exceed' offset threshold. Recipient Importance of each potential recipient locations represents the percentage of donor cells with a standardized offset below the offset threshold when paired with this recipient.
 
 #' @param standOffset (dataframe) A dataframe holding pairwise (standardized) offsets between donor and recipient locations.
 #' @param offsetThreshold (double) 'not to exceed' (standardized) offset threshold when evaluating transferability between donor and recipient locations.
 #' @param nCores (integer) Number of cores to be used in parallel computing. If defined function will automatically perform in parallel. (default = NA).
-#' @param nBreaks (integer) Number of chunks to subset rawOffset. Chunks will be sent to single cores. nBreaks should be equal or larger than nCores. If not defined while nCores is defined, nBreaks will be equal to nCores. (default = NA).
+#' @param nBreaks (integer) Number of chunks to subset 'standOffset'. Chunks will be sent to single cores. nBreaks should be equal or larger than nCores. If not defined while nCores is defined, nBreaks will be equal to nCores. (default = NA).
 #' @param outpath (string) Paths to write results. If defined, results will automatically be written to disk. (default = NULL).
 #' @param returnResult (boolean) if TRUE, data are (also) returned to the R environment independent of whether an outpath is specified. (default = TRUE).
 #' @param returnTransferabilityMatrix (boolean) if TRUE, a binary transferability matrix between donors and recipients is also returned.
@@ -26,7 +26,7 @@
 #' redSprucePops_blueRidge_DI_RI[[2]][1:10,]
 #'
 #' # Map recipient importance
-#' # Will ned to find a way of mapping without depending on sf
+#' # Will need to find a way of mapping without depending on sf
 #' #require(ggplot2)
 #' #require(maps)
 #' #load(blueRidge_transAlteredClimate)
