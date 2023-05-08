@@ -41,7 +41,12 @@
 
 #' @export
 # Function
-spatTempOffset <- function(transEnv, transAltEnv, nCores = NA, nBreaks = NA, outpath = NULL, returnResult = TRUE){
+spatTempOffset <- function(transEnv,
+                           transAltEnv,
+                           nCores = NA,
+                           nBreaks = NA,
+                           outpath = NULL,
+                           returnResult = TRUE){
   # Run in parallel
   if(!is.na(nCores)){
     ### Checks if both nCores and nBreaks have been defined, if not sets nBreaks == nCores
