@@ -4,7 +4,7 @@
 <!-- badges: start -->
 <!-- badges: end -->
 
-The offsetEnsembleR package provides tools for calculating and standardizing genomic offsets between donor populations under current and recipient locations of population transfers under future environmental conditions. The package also allows to calculate the novel metrics of Donor and Recipient Importance (Lachmuth et al., in review). Potential applications of the offsetEnsembleR pipeline include but are not restricted to: (1) assessing *in situ* global change risks, (2) mapping future habitat suitability while accounting for local adaptations, or (3) selecting donor populations and recipient areas that maximize genomic diversity and minimize maladaptation to future environments in translocation planning.
+The offsetEnsembleR package provides tools for calculating and standardizing genomic offsets between donor populations under current and recipient locations under future environmental conditions. The package also allows to calculate the novel metrics of Donor and Recipient Importance (Lachmuth et al., 2023a,b). Potential applications of the offsetEnsembleR pipeline include but are not restricted to: (1) assessing *in situ* global change risks, (2) mapping future habitat suitability while accounting for local adaptations, or (3) selecting donor populations and recipient areas that maximize genomic diversity and minimize maladaptation to future environments in population translocation planning.
 
 For the moment, ecological genomic model fitting and the transformation of environmental variables by rescaling them into common units of genomic turnover based on model predictions is not yet part of the package. Instead, data files containing such transformed variables must be created a priori to serve as input for the offsetEnsembleR pipeline. Additional functionality will successively be added.
 
@@ -18,7 +18,7 @@ To calculate genomic offsets, Euclidean distances between grid cells in the mult
 
 ## Standardization of Spatio-Temporal Offsets
 
-To increase the interpretability of (spatio-) temporal offsets, offsetEnsembleR standardizes them using the approach presented by Lachmuth et al. (in review). This is done by probabilistically re-expressing the offsets as z-scores based on the empirical distribution of contemporary spatial offsets. This approach re-scales the (spatio-) temporal offsets relative to the present-day genetic differences between populations across the geographic distribution of the species while also removing confounding effects of dimensionality on Euclidean distance.
+To increase the interpretability of (spatio-) temporal offsets, offsetEnsembleR standardizes them using the approach presented by Lachmuth et al. (2023a,b). This is done by probabilistically re-expressing the offsets as z-scores based on the empirical distribution of contemporary spatial offsets. This approach re-scales the (spatio-) temporal offsets relative to the present-day genetic differences between populations across the geographic distribution of the species while also removing confounding effects of dimensionality on Euclidean distance.
 
 It is important to note that both spatial and spatio-temporal offsets need to be calculated based on the same fitted ecological genomic model.
 
