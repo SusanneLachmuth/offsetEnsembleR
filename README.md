@@ -45,4 +45,6 @@ Examples are provided in the documentation of the functions included in the pack
 
 ## References
 
-- Lachmuth, S., Capblancq, T., Prakash, A., Keller, S.R., Fitzpatrick, M.C., in review. Novel genomic offset metrics integrate local adaptation into habitat suitability forecasts and inform assisted migration.
+- Lachmuth, S., Capblancq, T., Prakash, A., Keller, S.R., Fitzpatrick, M.C., (2023a). Novel genomic offset metrics integrate local adaptation into habitat suitability forecasts and inform assisted migration. Preprint. BioRxiv. Ecology. https://doi.org/10.1101/2023.06.05.541958
+
+- Lachmuth, S., Capblancq, T., Keller, S.R., Fitzpatrick, M.C., (2023b). Assessing uncertainty in genomic offset forecasts from landscape genomic models (and implications for restoration and assisted migration). Frontiers in Ecology and Evolution 11: 495. doi: 10.3389/fevo.2023.1155783
