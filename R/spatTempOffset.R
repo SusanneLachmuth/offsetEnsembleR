@@ -60,7 +60,7 @@ spatTempOffset <- function(transEnv,
     }
 
     # Split data
-    breakIt <- split(1:nrow(transAltEnv), cut(1:nrow(transAltEnv), nCores, nBreaks, labels = FALSE))
+    breakIt <- split(1:nrow(transAltEnv), cut(1:nrow(transAltEnv), nBreaks, labels = FALSE)) #nCores,
 
     # Set up cluster
     cl <- parallel::makeCluster(nCores)
